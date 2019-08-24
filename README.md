@@ -48,7 +48,7 @@ Both classes are meant to mimic the scikit-learn tuners (to a certain degree).  
 
 ## Future Plans
 
-The next functionality that is planned to be added is a Bayesian search method and a method that fits multiple grids to zero in on a decent hyperparameter.
+The next functionality planned to be added is a Bayesian search method and a method that fits multiple grids to zero in on good hyperparameters.
 
 ## License
 
