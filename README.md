@@ -21,30 +21,30 @@ pip install tuneRs
 
 Both classes are meant to mimic the scikit-learn tuners (to a certain degree).  A simple example would be:
 
-import tuneRs
+	<p>import tuneRs
+	
+	model = SVC(kernel='rbf')
+	
+	parameters = {["gamma": [0.001, 0.01, 0.1, 1.0, 10.0],
+			"C": [0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]}
 
-model = SVC(kernel='rbf')
+	# Set up for a random hyperparameter search
+	tuner = tuneRs.RandomSearchResample(model, parameters, num_iters=300, sample_size=0.3, num_samples=12)
 
-parameters = {\["gamma": \[0.001, 0.01, 0.1, 1.0, 10.0], <br/>
-				"C": \[0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]}
-
-\# Set up for a random hyperparameter search <br/>
-tuner = tuneRs.RandomSearchResample(model, parameters, num_iters=300, sample_size=0.3, num_samples=12)
-
-\# Fit the tuner <br/>
-tuner.fit(X_train, y_train)
-
-\# Display the best parameters found <br/>
-tuner.best_params_
-
-\# Display the aggregate resample score of the best parameters <br/>
-tuner.best_score_
-
-\# Define our new model <br/>
-model = tuner.best_estimator_
-
-\# Plot the resample accuracy distribution for the model with best hyperparameters <br/>
-tuner.plot_best()
+	# Fit the tuner
+	tuner.fit(X_train, y_train)
+	
+	# Display the best parameters found
+	tuner.best_params_
+	
+	# Display the aggregate resample score of the best parameters <br/>
+	tuner.best_score_
+	
+	# Define our new model
+	model = tuner.best_estimator_
+	
+	# Plot the resample accuracy distribution for the model with best hyperparameters <br/>
+	tuner.plot_best()</p>
 
 ## Future Plans
 
