@@ -21,7 +21,7 @@ pip install tuneRs
 
 Both classes are meant to mimic the scikit-learn tuners (to a certain degree).  A simple example would be:
 
-	<p>import tuneRs
+	import tuneRs
 	
 	model = SVC(kernel='rbf')
 	
@@ -44,7 +44,7 @@ Both classes are meant to mimic the scikit-learn tuners (to a certain degree).  
 	model = tuner.best_estimator_
 	
 	# Plot the resample accuracy distribution for the model with best hyperparameters <br/>
-	tuner.plot_best()</p>
+	tuner.plot_best()
 
 ## Future Plans
 
