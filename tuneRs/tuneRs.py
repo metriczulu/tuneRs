@@ -1,6 +1,6 @@
 class SearchMixin:
 
-    def __init__(self, model, params, num_iter=60, num_samples=10, sample_size=0.2, test_size=0.3, metric=None,
+    def __init__(self, model, params, num_samples=10, sample_size=0.2, test_size=0.3, metric=None,
                  random_state=None):
         import numpy as np
         self.np = np
@@ -29,7 +29,6 @@ class SearchMixin:
         if random_state is None:
             random_state = np.random.randint(0, 36000)
         self.random_state = random_state
-        self.num_iter = num_iter
         self.best_score_ = 0.0
         self.best_estimator_ = None
         self.best_std_ = 0.0
@@ -66,7 +65,7 @@ class SearchMixin:
         return mean, std, sample_scores
 
     def fit(self, X, y, verbose=True):
-        for random_param in tqdm_notebook(self.param_grid, disable=(not verbose)):
+        for random_param in self.tqdm_notebook(self.param_grid, disable=(not verbose)):
             self.model.set_params(**random_param)
             score, std, distribution = self.__resample_eval(self.model, X, y)
             if score > self.best_score_:
@@ -88,10 +87,10 @@ class SearchMixin:
 
 class RandomSearchResample(SearchMixin):
 
-    def __init__(self, model, params, num_iter=60, num_samples=10, sample_size=0.2, test_size=0.3, metric=None,
-                 random_state=None):
-            super().__init__(model, params, num_iter, num_samples, sample_size, test_size, metric, random_state)
-
+    def __init__(self, model, params, num_samples=10, sample_size=0.2, test_size=0.3, metric=None,
+                 random_state=None, num_iter=60):
+            super().__init__(model, params, num_samples, sample_size, test_size, metric, random_state)
+            self.num_iter = num_iter
             self.param_grid = self.__generate_grid(self.random_state+3)
 
     def __generate_grid(self, random_state=None):
@@ -106,8 +105,8 @@ class RandomSearchResample(SearchMixin):
 
 class GridSearchResample(SearchMixin):
 
-    def __init__(self, model, params, num_iter=60, num_samples=10, sample_size=0.2, test_size=0.3, metric=None):
-        super().__init__(model, params, num_iter, num_samples, sample_size, test_size, metric, random_state=None)
+    def __init__(self, model, params, num_samples=10, sample_size=0.2, test_size=0.3, metric=None):
+        super().__init__(model, params, num_samples, sample_size, test_size, metric, random_state=None)
 
         self.param_grid = self.__generate_grid()
 
