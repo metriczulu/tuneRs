@@ -3,11 +3,13 @@ class SearchMixin:
     def __init__(self, model, params, num_samples=10, sample_size=0.2, test_size=0.3, metric=None,
                  random_state=None):
         import numpy as np
+        import copy
+        self.copy = copy
         self.np = np
         try:
-            import tqdm
+            from tqdm import tqdm, tqdm_notebook
             if self.__in_notebook():
-                self.tqdm = tqdm.tqdm_notebook
+                self.tqdm = tqdm_notebook
             else:
                 self.tqdm = tqdm
         except:
@@ -51,8 +53,8 @@ class SearchMixin:
         self.np.random.seed(self.random_state)
         random_list = self.np.random.randint(0, 36000, size=self.num_samples)
         sample_scores = []
-        for sample_ndx in tqdm_notebook(range(self.num_samples), disable=(not verbose)):
-            X_sample, _, y_sample, _ = train_test_split(X, y, train_size=self.sample_size, stratify=y,
+        for sample_ndx in range(self.num_samples):
+            X_sample, _, y_sample, _ = self.train_test_split(X, y, train_size=self.sample_size, stratify=y,
                                                         random_state=random_list[sample_ndx] + 13)
             X_train, X_test, y_train, y_test = self.train_test_split(X_sample, y_sample, test_size=self.test_size,
                                                                 stratify=y_sample,
@@ -72,7 +74,7 @@ class SearchMixin:
                 self.best_params_ = random_param
                 self.best_score_ = score
                 self.best_std_ = std
-                self.best_estimator_ = copy.copy(self.model)
+                self.best_estimator_ = self.copy.copy(self.model)
                 self.best_distribution_ = distribution
 
     def plot_best(self, color="orange", linecolor="orangered", figsize=(12, 8)):
