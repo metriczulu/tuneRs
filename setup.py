@@ -14,7 +14,7 @@ setup(
     author='Shane Stephenson / metriczulu',
     author_email='stephenson.shane.a@gmail.com', 
     packages=find_packages(),
-    install_requires = ['numpy', 'tqdm', 'sklearn', 'skopt'],
+    install_requires = ['numpy', 'tqdm', 'sklearn'],
     version='v0.1',
     license="All yours bro",
     description='Package for tuning hyperparameters with resampling methods',
