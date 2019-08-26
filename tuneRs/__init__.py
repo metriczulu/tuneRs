@@ -1,2 +1,1 @@
-from tuneRs import SearchMixin, RandomSearchResample, GridSearchResample
-from skopt import Real, Integer, Categorical
+from tunerRs.tuneRs import SearchMixin, RandomSearchResample, GridSearchResample
