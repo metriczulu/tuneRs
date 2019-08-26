@@ -64,8 +64,8 @@ class SearchMixin:
         std = self.np.std(sample_scores)
         return mean, std, sample_scores
 
-    def fit(self, X, y, verbose=True):
-        for random_param in self.tqdm_notebook(self.param_grid, disable=(not verbose)):
+    def fit(self, X, y, verbose=False):
+        for random_param in self.tqdm(self.param_grid, disable=(not verbose)):
             self.model.set_params(**random_param)
             score, std, distribution = self.__resample_eval(self.model, X, y)
             if score > self.best_score_:
