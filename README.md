@@ -5,9 +5,9 @@
 **GridSearchResample** uses the grid search method to optimize hyperparameters.
 
 **RandomSearchResample** uses the random search method to optimize hyperparameters.
-## Current Version is 0.1
+## Current Version is v0.54
 
-This package is currently in it's first version and is extremely bare-boned.
+This package is currently in the beginning stages and is very bare-bones
 
 ## Installation
 
@@ -48,8 +48,8 @@ Both classes are meant to mimic the scikit-learn tuners (to a certain degree).  
 
 ## Future Plans
 
-The next functionality planned to be added is a Bayesian search method and a method that fits multiple grids to zero in on good hyperparameters.
+Multiple tuners are currently planned to be added.  The next one will be a Bayesian search method.  A dynamic version of grid search and random search is currently being worked on that iterates fit multiple times on increasingly small areas of the data space.
 
 ## License
 
-LOL none.
+Lol

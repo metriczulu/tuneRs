@@ -15,10 +15,10 @@ setup(
     author_email='stephenson.shane.a@gmail.com', 
     packages=find_packages(),
     install_requires = ['numpy', 'tqdm', 'sklearn'],
-    version='v0.53',
+    version='v0.54',
     license="None",
     description='Package for tuning hyperparameters with resampling methods',
     long_description_content_type='text/markdown',
     long_description=open('README.md', 'r').read(),
-    download_url = 'https://github.com/metriczulu/tuneRs/archive/v0.53.tar.gz'
+    download_url = 'https://github.com/metriczulu/tuneRs/archive/v0.54.tar.gz'
 )
