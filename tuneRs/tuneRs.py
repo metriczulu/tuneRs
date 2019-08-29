@@ -4,8 +4,8 @@ class SearchMixin:
                  val_data=None, random_state=None):
         import numpy as np
         import copy
-        import tqdm
-        self.tqdm = tqdm.tqdm
+        from tqdm.auto import tqdm
+        self.tqdm = tqdm
         from sklearn.model_selection import train_test_split
         self.train_test_split = train_test_split
         self.copy = copy
@@ -38,15 +38,6 @@ class SearchMixin:
         self.best_estimator_ = None
         self.params = params
         self.param_grid = self.__generate_grid()
-
-    def __in_notebook(self):
-        try:
-            from IPython import get_ipython
-            if 'IPKernelApp' not in get_ipython().config:  # pragma: no cover
-                return False
-        except ImportError:
-            return False
-        return True
 
     def __generate_grid(self, random_state=None):
         return dict()
