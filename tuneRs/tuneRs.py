@@ -4,20 +4,13 @@ class SearchMixin:
                  val_data=None, random_state=None):
         import numpy as np
         import copy
-        self.copy = copy
-        self.np = np
-        try:
-            from tqdm import tqdm, tqdm_notebook
-            if self.__in_notebook():
-                self.tqdm = tqdm_notebook
-            else:
-                self.tqdm = tqdm
-        except:
-            self.tqdm = lambda x: x
+        import tqdm
+        self.tqdm = tqdm.tqdm
         from sklearn.model_selection import train_test_split
         self.train_test_split = train_test_split
+        self.copy = copy
+        self.np = np
         self.set_params(model, params, num_samples, sample_size, test_size, metric, val_data, random_state)
-
 
     def set_params(self, model, params, num_samples=10, sample_size=0.2, test_size=0.3, metric=None,
                  val_data=None, random_state=None):
