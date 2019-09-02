@@ -10,15 +10,15 @@ from setuptools import setup, find_packages
 setup(
 
     name='tuneRs',
-    url='https://github.com/metriczulu/wordvecpy',
+    url='https://github.com/metriczulu/tuneRs',
     author='Shane Stephenson / metriczulu',
     author_email='stephenson.shane.a@gmail.com', 
     packages=find_packages(),
     install_requires = ['numpy', 'tqdm', 'sklearn'],
-    version='v0.55',
+    version='v0.56',
     license="None",
     description='Package for tuning hyperparameters with resampling methods',
     long_description_content_type='text/markdown',
     long_description=open('README.md', 'r').read(),
-    download_url = 'https://github.com/metriczulu/tuneRs/archive/v0.55.tar.gz'
+    download_url = 'https://github.com/metriczulu/tuneRs/archive/v0.56.tar.gz'
 )

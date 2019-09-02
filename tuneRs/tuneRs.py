@@ -2,6 +2,17 @@ class SearchMixin:
 
     def __init__(self, model, params, num_samples=10, sample_size=0.2, test_size=0.3, metric=None,
                  val_data=None, random_state=None):
+        '''
+
+        :param model: model to tune.  Must have .fit() and .predict() methods in the scikit-learn style
+        :param params:
+        :param num_samples:
+        :param sample_size:
+        :param test_size:
+        :param metric:
+        :param val_data:
+        :param random_state:
+        '''
         import numpy as np
         import copy
         from tqdm.auto import tqdm
@@ -73,8 +84,8 @@ class SearchMixin:
             if score > self.best_score_:
                 self.best_params_ = random_param
                 self.best_score_ = score
-                self.best_estimator_ = self.copy.deepcopy(self.model)
                 self.best_distribution_ = distribution
+        self.best_estimator_ = self.model.set_params(**self.best_params_)
         if train_best_estimator and not self.simple_split:
             self.best_estimator_.fit(X, y)
         return self.best_estimator_
