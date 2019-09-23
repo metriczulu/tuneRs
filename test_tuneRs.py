@@ -1,12 +1,11 @@
 import unittest
 
-
-class RollTest(unittest.TestCase):
+class TunerTest(unittest.TestCase):
 
     def setUp(self):
         import numpy as np
         from sklearn.linear_model import LogisticRegression
-        from skopt.space import Real
+        from tuneRs.space import LogNormal
         self.lr = LogisticRegression(random_state=0)
         np.random.seed(0)
         self.x_train = np.random.rand(80, 2)
@@ -14,7 +13,7 @@ class RollTest(unittest.TestCase):
         self.y_train = np.random.randint(0, 2, 80)
         self.y_test = np.random.randint(0, 2, 20)
         self.grid_C = {'C': [0.1, 1, 10]}
-        self.rand_C = {'C': Real(0.1, 10)}
+        self.rand_C = {'C': LogNormal(0.1, 10)}
 
     def test_grid_resampled(self):
         from tuneRs.tuneRs import GridSearchResample
@@ -31,10 +30,10 @@ class RollTest(unittest.TestCase):
         test = RandomSearchResample(self.lr, self.rand_C, n_iter=10, random_state=1)
         test.fit(self.x_train, self.y_train)
         test_score = int(test.best_score_ * 10)  # should be 5
-        test_params = int(test.best_params_['C'] * 10)  # should be 88
+        test_params = int(test.best_params_['C'] * 10)  # should be 36
         print(f"random rs {test_score}, {test_params}")
         self.assertEqual(test_score, 5, "Incorrect random resample score")
-        self.assertEqual(test_params, 88, "Incorrect random resample param")
+        self.assertEqual(test_params, 36, "Incorrect random resample param")
 
     def test_grid_cv(self):
         from tuneRs.tuneRs import GridSearchCrossval
@@ -71,9 +70,11 @@ class RollTest(unittest.TestCase):
         test = RandomSearchSimple(self.lr, self.rand_C, val_set=(self.x_test, self.y_test), n_iter=10, random_state=1)
         test.fit(self.x_train, self.y_train)
         test_score = int(test.best_score_ * 10)  # should be 6
-        test_params = int(test.best_params_['C'] * 10)  # should be 23
+        test_params = int(test.best_params_['C'] * 10)  # should be 2
         print(f"random rs {test_score}, {test_params}")
         self.assertEqual(test_score, 6, "Incorrect random simple score")
-        self.assertEqual(test_params, 23, "Incorrect random simple param")
+        self.assertEqual(test_params, 2, "Incorrect random simple param")
+
+
 if __name__=='__main__':
     unittest.main()
