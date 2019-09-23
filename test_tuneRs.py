@@ -1,66 +1,79 @@
 import unittest
 
 
-class GridTest(unittest.TestCase):
+class RollTest(unittest.TestCase):
 
     def setUp(self):
         import numpy as np
-        from tuneRs.tuneRs import GridSearchResample
         from sklearn.linear_model import LogisticRegression
+        from skopt.space import Real
+        self.lr = LogisticRegression(random_state=0)
         np.random.seed(0)
         self.x_train = np.random.rand(80, 2)
         self.x_test = np.random.rand(20, 2)
         self.y_train = np.random.randint(0, 2, 80)
         self.y_test = np.random.randint(0, 2, 20)
-        self.test_resampled = GridSearchResample(LogisticRegression(random_state=0), {'C': [0.1, 1, 10]}, random_state=1)
-        self.test_split = GridSearchResample(LogisticRegression(random_state=0), {'C': [0.1, 1, 10]},
-                                        val_data=(self.x_test, self.y_test), random_state=1)
+        self.grid_C = {'C': [0.1, 1, 10]}
+        self.rand_C = {'C': Real(0.1, 10)}
 
-    def test_resampled(self):
-        self.test_resampled.fit(self.x_train, self.y_train)
-        test_rs_score = int(self.test_resampled.best_score_ * 10)  # should be 5
-        test_rs_params = int(self.test_resampled.best_params_['C'] * 10)  # should be 100
+    def test_grid_resampled(self):
+        from tuneRs.tuneRs import GridSearchResample
+        test_resampled = GridSearchResample(self.lr, self.grid_C, random_state=1)
+        test_resampled.fit(self.x_train, self.y_train)
+        test_rs_score = int(test_resampled.best_score_ * 10)  # should be 5
+        test_rs_params = int(test_resampled.best_params_['C'] * 10)  # should be 100
+        print(f"random rs {test_rs_score}, {test_rs_params}")
         self.assertEqual(test_rs_score, 5, "Incorrect grid resample score")
         self.assertEqual(test_rs_params, 100, "Incorrect grid resample param")
 
-    def test_split(self):
-        self.test_split.fit(self.x_train, self.y_train)
-        test_split_score = int(self.test_split.best_score_ * 10)  # should be 6
-        test_split_params = int(self.test_split.best_params_['C'] * 10)  # should be 1
-        self.assertEqual(test_split_score, 6, "Incorrect grid split score")
-        self.assertEqual(test_split_params, 1, "Incorrect grid split score")
-
-
-class RandomTest(unittest.TestCase):
-
-    def setUp(self):
-        import numpy as np
-        from sklearn.linear_model import LogisticRegression
+    def test_random_resampled(self):
         from tuneRs.tuneRs import RandomSearchResample
-        from skopt.space import Real
-        np.random.seed(0)
-        self.x_train = np.random.rand(80, 2)
-        self.x_test = np.random.rand(20, 2)
-        self.y_train = np.random.randint(0, 2, 80)
-        self.y_test = np.random.randint(0, 2, 20)
-        self.test_resampled = RandomSearchResample(LogisticRegression(random_state=0), {'C': Real(0.1, 10)},
-                                                   num_iter=10, random_state=1)
-        self.test_split = RandomSearchResample(LogisticRegression(random_state=0), {'C': Real(0.1, 10)},
-                                               num_iter=10, val_data=(self.x_test, self.y_test), random_state=1)
+        test = RandomSearchResample(self.lr, self.rand_C, n_iter=10, random_state=1)
+        test.fit(self.x_train, self.y_train)
+        test_score = int(test.best_score_ * 10)  # should be 5
+        test_params = int(test.best_params_['C'] * 10)  # should be 88
+        print(f"random rs {test_score}, {test_params}")
+        self.assertEqual(test_score, 5, "Incorrect random resample score")
+        self.assertEqual(test_params, 88, "Incorrect random resample param")
 
-    def test_resampled(self):
-        self.test_resampled.fit(self.x_train, self.y_train)
-        test_rs_score = int(self.test_resampled.best_score_ * 10)  # should be 5
-        test_rs_params = int(self.test_resampled.best_params_['C'] * 10)  # should be 73
-        self.assertEqual(test_rs_score, 5, "Incorrect random resample score")
-        self.assertEqual(test_rs_params, 73, "Incorrect random resample param")
+    def test_grid_cv(self):
+        from tuneRs.tuneRs import GridSearchCrossval
+        test_resampled = GridSearchCrossval(self.lr, self.grid_C, random_state=1)
+        test_resampled.fit(self.x_train, self.y_train)
+        test_rs_score = int(test_resampled.best_score_ * 10)  # should be 5
+        test_rs_params = int(test_resampled.best_params_['C'] * 10)  # should be 1
+        print(f"random rs {test_rs_score}, {test_rs_params}")
+        self.assertEqual(test_rs_score, 5, "Incorrect grid cv score")
+        self.assertEqual(test_rs_params, 1, "Incorrect grid cv param")
 
-    def test_split(self):
-        self.test_split.fit(self.x_train, self.y_train)
-        test_split_score = int(self.test_split.best_score_ * 10)  # should be 6
-        test_split_params = int(self.test_split.best_params_['C'] * 10)  # should be 90
-        self.assertEqual(test_split_score, 6, "Incorrect random split score")
-        self.assertEqual(test_split_params, 90, "Incorrect random split param")
+    def test_random_cv(self):
+        from tuneRs.tuneRs import RandomSearchCrossval
+        test = RandomSearchCrossval(self.lr, self.rand_C, n_iter=10, random_state=1)
+        test.fit(self.x_train, self.y_train)
+        test_score = int(test.best_score_ * 10)  # should be 5
+        test_params = int(test.best_params_['C'] * 10)  # should be 2
+        print(f"random rs {test_score}, {test_params}")
+        self.assertEqual(test_score, 5, "Incorrect random cv score")
+        self.assertEqual(test_params, 2, "Incorrect random cv param")
 
+    def test_grid_simple(self):
+        from tuneRs.tuneRs import GridSearchSimple
+        test_resampled = GridSearchSimple(self.lr, self.grid_C, val_set=(self.x_test, self.y_test), random_state=1)
+        test_resampled.fit(self.x_train, self.y_train)
+        test_rs_score = int(test_resampled.best_score_ * 10)  # should be 6
+        test_rs_params = int(test_resampled.best_params_['C'] * 10)  # should be 1
+        print(f"random rs {test_rs_score}, {test_rs_params}")
+        self.assertEqual(test_rs_score, 6, "Incorrect grid simple score")
+        self.assertEqual(test_rs_params, 1, "Incorrect grid simple param")
+
+    def test_random_simple(self):
+        from tuneRs.tuneRs import RandomSearchSimple
+        test = RandomSearchSimple(self.lr, self.rand_C, val_set=(self.x_test, self.y_test), n_iter=10, random_state=1)
+        test.fit(self.x_train, self.y_train)
+        test_score = int(test.best_score_ * 10)  # should be 6
+        test_params = int(test.best_params_['C'] * 10)  # should be 23
+        print(f"random rs {test_score}, {test_params}")
+        self.assertEqual(test_score, 6, "Incorrect random simple score")
+        self.assertEqual(test_params, 23, "Incorrect random simple param")
 if __name__=='__main__':
     unittest.main()

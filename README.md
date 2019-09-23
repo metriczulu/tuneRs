@@ -5,7 +5,7 @@
 **GridSearchResample** uses the grid search method to optimize hyperparameters.
 
 **RandomSearchResample** uses the random search method to optimize hyperparameters.
-## Current Version is v0.55
+## Current Version is v0.57
 
 This package is currently in the beginning stages and is very bare-bones
 
