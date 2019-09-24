@@ -11,7 +11,9 @@ class SearchMixin:
         Mixin class for all searches.
 
         :param model: model to tune.  Must have .fit() and .predict() methods in the scikit-learn style
-        :param params: parameter dictionary
+        :param grid_params: Parameters to grid search over
+        :param random_params: Parameters to random search over
+        :param n_random: Number of random parameters to use in search
         :param metric: performance metric
         :param random_state: random state
         '''
