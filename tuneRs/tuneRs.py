@@ -173,6 +173,7 @@ class ResampleSearch(SearchMixin):
         super().__init__(model=model, grid_params=grid_params, random_params=random_params, n_random=n_random,
                          metric=metric, random_state=random_state)
 
+
     def _eval(self, model, X, y, random_state=None, verbose=False):
         if random_state is None:
             random_state = np.random.randint(0, 36e6)
