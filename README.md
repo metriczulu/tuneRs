@@ -28,7 +28,7 @@ All classes are meant to mimic the scikit-learn tuners (to a certain degree).  A
 
 ```python	
 from sklearn.svm import SVC
-import tuneRs
+from tuneRs import tuners, space
 	
 model = SVC()
 	
