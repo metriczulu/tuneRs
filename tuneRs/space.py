@@ -27,7 +27,7 @@ class Uniform:
         elif self.dtype == "float32":
             return np.random.uniform(lower, upper).astype(np.float32)
 
-    def rvs(self, num_samples, random_state=None):
+    def rvs(self, num_samples=1, random_state=None):
         '''
         Samples the distribution
 
@@ -94,7 +94,7 @@ class Normal:
             if num <= self.max: return num
             else: return self._single_rvs(random_state=random_state + 1)
 
-    def rvs(self, num_samples, random_state=None):
+    def rvs(self, num_samples=1, random_state=None):
         if random_state is None:
             random_state = np.random.randint(0, 36e7)
         np.random.seed(random_state)
@@ -132,7 +132,7 @@ class LogNormal:
         self.replace = replace
         self.reverse = reverse
 
-    def rvs(self, num_samples, random_state=None):
+    def rvs(self, num_samples=1, random_state=None):
         if random_state is None:
             random_state = np.random.randint(0, 36e7)
         np.random.seed(random_state)
@@ -169,7 +169,7 @@ class Categorical:
             self.probs = [1/len(categories)]*len(categories)
         self.replace = replace
 
-    def rvs(self, num_samples, random_state=None):
+    def rvs(self, num_samples=1, random_state=None):
         if random_state is None:
             random_state = np.random.randint(0, 36e7)
         np.random.seed(random_state)
@@ -201,7 +201,7 @@ class Concatenate:
             self.default_probs = True
             self.probs = [1/len(dist_list)]*len(dist_list)
 
-    def rvs(self, num_samples, random_state=None):
+    def rvs(self, num_samples=1, random_state=None):
         if random_state is None:
             random_state = np.random.randint(0, 36e7)
         np.random.seed(random_state)
@@ -225,3 +225,49 @@ class Concatenate:
         else:
             self.default_probs = True
             self.probs = [1/len(dist_list)]*len(dist_list)
+
+class Cartesian:
+
+    def __init__(self, dist_list, condition_function=None, type="tuple"):
+        '''
+        Draw random samples from the cartesian product space of multiple space distributions
+
+        :param dist_list: List of distributions to draw from
+        :param type: If "tuple", return a tuple.  Else, return a list
+        :param condition_function: If None, draw randomly from entire cartesian product space.  Else, input a function
+            which maps any element (a, b, c,..., n) in the Cartestian production space AxBxCx...xN to either True or False.
+            Only sample elements which for which condition_function is True.
+        '''
+        self.dist_list = dist_list
+        self.type = type
+        self.size = len(self.dist_list)
+        if condition_function is None:
+            self.condition_function = lambda x: True
+        else:
+            self.condition_function = condition_function
+
+    def _single_rvs(self, random_state=None):
+        if random_state is None:
+            random_state = np.random.randint(0, 36e7)
+        np.random.seed(random_state)
+        draw_list = []
+        rand_list = np.random.randint(0, 36e7, self.size)
+        for index, dist in enumerate(self.dist_list):
+            draw = dist.rvs(1, random_state=rand_list[index])[0]
+            draw_list.append(draw)
+        if self.type=="tuple":
+            draw_list = tuple(draw_list)
+        if not self.condition_function(draw_list):
+            draw_list = self._single_rvs(random_state=random_state+42)
+        return draw_list
+
+
+    def rvs(self, num_samples, random_state=None):
+        if random_state is None:
+            random_state = np.random.randint(0, 36e7)
+        np.random.seed(random_state)
+        rand_list = np.random.randint(0, 36e7, num_samples)
+        rvs_list = []
+        for sample in range(num_samples):
+            rvs_list.append(self._single_rvs(random_state=rand_list[sample]))
+        return rvs_list
