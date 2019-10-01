@@ -5,7 +5,7 @@ class TunerTest(unittest.TestCase):
     def setUp(self):
         import numpy as np
         from sklearn.linear_model import LogisticRegression
-        from tuneRs.space import LogNormal
+        from tuneRs.space import LogUniform
         self.lr = LogisticRegression(random_state=0)
         np.random.seed(0)
         self.x_train = np.random.rand(80, 2)
@@ -13,7 +13,7 @@ class TunerTest(unittest.TestCase):
         self.y_train = np.random.randint(0, 2, 80)
         self.y_test = np.random.randint(0, 2, 20)
         self.grid_C = {'C': [0.1, 1, 10]}
-        self.rand_C = {'C': LogNormal(0.1, 10)}
+        self.rand_C = {'C': LogUniform(0.1, 10)}
 
     def test_resampled(self):
         from tuneRs.tuners import ResampleSearch

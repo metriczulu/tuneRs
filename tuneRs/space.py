@@ -112,7 +112,7 @@ class Normal:
                 random_list.append(self._single_rvs(random_state=rand_list[index]))
             return random_list
 
-class LogNormal:
+class LogUniform:
 
     def __init__(self, lower, upper, granularity=1000, replace=True, reverse=False, dtype="float"):
         '''

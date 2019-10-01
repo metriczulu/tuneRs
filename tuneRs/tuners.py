@@ -145,8 +145,8 @@ class SearchMixin:
         Combines both grid and random hyperparameter generation together.  Input parameters are the same as above.
         '''
         from itertools import product
-        grid = generate_grid_grid(grid_params)
-        random = generate_random_grid(random_params, n_random, random_state)
+        grid = self._generate_grid_grid(grid_params)
+        random = self._generate_random_grid(random_params, n_random, random_state)
         return list(product(*[grid, random]))
 
 
