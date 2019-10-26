@@ -47,13 +47,13 @@ tuner.fit(X_train, y_train)
 # Display the best parameters found
 tuner.best_params_
 	
-# Display the aggregate resample score of the best parameters <br/>
+# Display the aggregate resample score of the best parameters
 tuner.best_score_
 	
 # Define our new model
 model = tuner.best_estimator_
 	
-# Plot the resample accuracy distribution for the model with best hyperparameters <br/>
+# Plot the resample accuracy distribution for the model with best hyperparameters
 tuner.plot_best()
 	
 # Random search parameters
@@ -61,7 +61,8 @@ parameters = {"gamma": space.LogNormal(0.001, 10.0, dtype="float32"),
 			"C": space.LogNormal(0.01, 1000.0, dtype="float32"),
 			"degree": space.Uniform(1, 4, dtype="int"),
 			"kernel": space.Categorical(['poly', 'rbf'], probs=[0.75, 0.25])}
-# Set up a random hyperparameter search over 100 parameter combinations with 5-fold crossvalidation accuracy estimate
+# Set up a random hyperparameter search over 100 parameter combinations with 5-fold 
+# crossvalidation accuracy estimate
 tuner = tuners.CrossvalSearch(model, random_params=parameters, n_random=100, cv=5)
 	
 # Proceed as above for everything else
